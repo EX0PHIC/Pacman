@@ -1,4 +1,13 @@
 #pragma once
+int minT(int i1, int i2, int i3, int i4)
+{
+	if (i1 <= i2 && i1 <= i3 && i1 <= i4) return 1;
+	if (i2 <= i1 && i2 <= i3 && i2 <= i4) return 2;
+	if (i3 <= i1 && i3 <= i2 && i3 <= i4) return 3;
+	if (i4 <= i1 && i4 <= i2 && i4 <= i3) return 4;
+	return 0;
+}
+
 int Distanta(sf::Vector2f v1, sf::Vector2f v2) {
 	int x1 = v1.x;
 	int x2 = v2.x;
@@ -242,4 +251,40 @@ void RectangleShapeLocal::aggressive_move()
 			}
 		}
 	else _gameState = Died;
+}
+
+void CreateMenuText() //to be rewritten&replaced ....probably
+{
+	Play.setString("New Game");
+	Exit.setString("Exit");
+	Continue.setString("Continue");
+	Naem.setString("");
+
+	Continue.setFont(Arial);
+	Continue.setCharacterSize(60);
+	Continue.setPosition(limit.x / 2 * 30, limit.y / 2 * 20);
+	Continue.setColor(sf::Color::Black);
+
+	Play.setFont(Arial);
+	Play.setCharacterSize(60);
+	Play.setPosition(limit.x / 2 * 30, limit.y / 2 * 25);
+	Play.setColor(sf::Color::Red);
+
+	Exit.setFont(Arial);
+	Exit.setCharacterSize(60);
+	Exit.setPosition(limit.x / 2 * 30, limit.y / 2 * 30);
+	Exit.setColor(sf::Color::Red);
+
+	Nume_Scor.setFont(Arial);
+	Nume_Scor.setCharacterSize(60);
+	Nume_Scor.setPosition(limit.x / 2, limit.y / 2 * 20);
+	Nume_Scor.setColor(sf::Color::Red);
+
+	current = &Continue;
+	Continue.urm = &Play;
+	Continue.pre = &Exit;
+	Play.urm = &Exit;
+	Play.pre = &Continue;
+	Exit.urm = &Continue;
+	Exit.pre = &Play;
 }
