@@ -23,6 +23,7 @@ void WriteConsole()
 	cout << v[(int)(a.y / rez)][(int)(a.x / rez)]<<endl;
 	cout << "BluePoz<" << a.y /rez << "," << a.x /rez << ">" << endl;
 	cout << "<" << limit.x - 1 << "> <" << limit.y + 2 << "> limita <x><y>";
+	cout << "k =" << k << endl;
 }
 
 void ReadLevel()
@@ -67,6 +68,11 @@ void DrawLevel()
 				window.draw(score_point);
 				score_point.setPosition(c * rez +rez/3, l * rez+rez/3);
 			}
+			if (level[l][c] == 'x')
+			{
+				x_point.setPosition(c * rez + rez / 2.5, l * rez + rez / 2.5);
+				window.draw(x_point);	
+			}
 			if (level[l][c] == 'g')
 			{
 				gate.setFillColor(sf::Color::Red);
@@ -108,10 +114,13 @@ void CreateWall()
 void CreateScorePoints()
 {
 	score_point.setFillColor(sf::Color(200, 20, 20));
+	x_point.setFillColor(sf::Color::Cyan);
 }
 
 void checkEvent()
 {
+	sf::Time elapsed2 = xclock.getElapsedTime();
+	sf::Time elapsed3 = tclock.getElapsedTime();
 	if (x / rez == 13 && y / rez == 0)
 	{
 		pacman.setPosition(26 * rez, 13 * rez);
@@ -136,6 +145,38 @@ void checkEvent()
 		WriteConsole();
 		level[x / rez][(y + 1) / rez] = 'e';
 	}
+	//x
+	if (level[x / rez][y / rez] == 'x')
+	{
+		xclock.restart();
+		score++;
+		k++;
+		WriteConsole();
+		level[x / rez][y / rez] = 'e';
+	}
+	if (level[x / rez][(y + 1) / rez] == 'x')
+	{
+		xclock.restart();
+		score++;
+		k++;
+		WriteConsole();
+		level[x / rez][(y + 1) / rez] = 'e';
+	}
+	if ((int)elapsed2.asSeconds() < 5 && (int)elapsed3.asSeconds() > 6)
+	{
+		blueP.setFillColor(sf::Color::Cyan);
+		redP.setFillColor(sf::Color::Cyan);
+		medP.setFillColor(sf::Color::Cyan);
+		greenP.setFillColor(sf::Color::Cyan);
+	}
+	else
+	{
+		blueP.setFillColor(sf::Color::Blue);
+		redP.setFillColor(sf::Color::Red);
+		medP.setFillColor(sf::Color::Magenta);
+		greenP.setFillColor(sf::Color::Green);
+	}
+
 
 }
 
@@ -383,7 +424,7 @@ void RunGame()
 			DrawScore();
 			showPacmanPoz();
 			pacMove();
-			if(score == 244) _gameState = Died;
+			if(score == 244 && k==3) _gameState = Died;
 			while (window.pollEvent(Event))
 			{
 				if (Event.type == sf::Event::KeyPressed)
@@ -403,7 +444,7 @@ void RunGame()
 			{
 			case 3:
 			{
-				PauseText.setString("2 lifes left \n/*press enter to \ncontinue */");
+				PauseText.setString("2 lives left \n/*press enter to \ncontinue */");
 				break;
 			}
 			case 2:
@@ -533,6 +574,7 @@ void RunGame()
 								clock.restart();
 								lives = 3;
 								score = 0;
+								k = 0;
 								_gameState = Uninitialized;
 							}
 						}

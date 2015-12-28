@@ -102,8 +102,13 @@ bool RectangleShapeLocal::isColliding(RectangleShapeLocal aux)
 		return true;
 	return false;
 }
+void RectangleShapeLocal::Respawn()
+{
+	this->setPosition(14*rez, 14*rez);
+}
 void RectangleShapeLocal::passive_move()
 {
+	sf::Time elapsed2 = xclock.getElapsedTime();
 	if (!this->isColliding(pacman))
 	{
 		if (this->isMoving())
@@ -182,10 +187,17 @@ void RectangleShapeLocal::passive_move()
 			}
 		}
 	}
+	else
+		if((int)elapsed2.asSeconds() < 5)
+		{
+			score = score + 10;
+			this->Respawn();
+	}
 	else _gameState = Died;
 }
 void RectangleShapeLocal::aggressive_move()
 {
+	sf::Time elapsed2 = xclock.getElapsedTime();
 	if (!this->isColliding(pacman))
 		if (this->isMoving())
 		{
@@ -250,7 +262,13 @@ void RectangleShapeLocal::aggressive_move()
 			}
 			}
 		}
-	else _gameState = Died;
+	else
+		if ((int)elapsed2.asSeconds() < 5)
+		{
+			score = score + 10;
+			this->Respawn();
+		}
+		else _gameState = Died;
 }
 
 void CreateMenuText() //to be rewritten&replaced ....probably
