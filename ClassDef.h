@@ -11,16 +11,83 @@
 
 using namespace std;
 
-//some global var ::
+class TextMenu : public sf::Text //used in Menu
+{
+public:
+	using Text::Text;
+	TextMenu *pre;
+	TextMenu *urm;
+};
+
+enum GameState {
+	Uninitialized, Paused,
+	ShowingMenu, Playing, Exiting, Died
+};
+
+struct scoruri
+{
+	int valoare;
+	string nume;
+};
+
+class RectangleShapeLocal : public sf::RectangleShape
+{
+public:
+	using RectangleShape::RectangleShape;
+	using RectangleShape::move;
+	bool canMoveRight();
+	bool canMoveLeft();
+	bool canMoveUp();
+	bool canMoveDown();
+	bool isMoving();
+	bool isColliding(RectangleShapeLocal aux);
+	char moving;
+	void passive_move();
+	void aggressive_move();
+	int oldpoz_x = 0;
+	int oldpoz_y = 0;
+};
+
+int rez = 25;
+
+RectangleShapeLocal pacman(sf::Vector2f(rez, rez));
+RectangleShapeLocal blueP(sf::Vector2f(rez, rez));
+RectangleShapeLocal redP(sf::Vector2f(rez, rez));
+RectangleShapeLocal greenP(sf::Vector2f(rez, rez));
+RectangleShapeLocal medP(sf::Vector2f(rez, rez));
+
+
+
+
+
+
+
+
+
+
+
+
+
+scoruri scoruri_array[100];
+scoruri aux;
+
+
+
+
+
+
+
+
+
 
 char level[100][100];
-int rez = 25;
+
 int pacmanStartPoz_x = 1, pacmanStartPoz_y = 1;
 int x = pacmanStartPoz_x*rez, y = pacmanStartPoz_y*rez;
 int x_old = x, y_old = y;
 int score;
 int v[100][100] = { 10000 };
-int viz1=0,viz2=0;
+int viz1 = 0, viz2 = 0;
 int vz1 = 0, vz2 = 0;
 
 sf::Vector2f limit;
@@ -40,10 +107,7 @@ string inputName;
 string outputScor;
 
 
-enum GameState {
-	Uninitialized, Paused,
-	ShowingMenu, Playing, Exiting, Died
-};
+
 
 int minT(int i1, int i2, int i3, int i4)
 {
@@ -57,25 +121,13 @@ bool first = true;
 bool second = true;
 static GameState _gameState=ShowingMenu;
 int lives;
-class TextMenu : public sf::Text
-{
-public:
-	using Text::Text;
-	TextMenu *pre;
-	TextMenu *urm;
-};
+
 
 TextMenu Play, Score, Exit, Continue;
 TextMenu *current = &Play;
 sf::Text ScoreM;
 
-struct scoruri
-{
-	int valoare;
-	string nume;
-};
-scoruri scoruri_array[100];
-scoruri aux;
+
 
 void CreateMenuText()
 {

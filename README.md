@@ -1,2 +1,0 @@
-# Pacman
-Shitty Pacman
