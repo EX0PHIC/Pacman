@@ -1,3 +1,2 @@
-# Pacman
-Shitty Pacman \n
+# SPacman
 You need to compile it with SFML
