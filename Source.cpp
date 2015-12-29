@@ -150,7 +150,6 @@ void checkEvent()
 	{
 		xclock.restart();
 		score++;
-		k++;
 		WriteConsole();
 		level[x / rez][y / rez] = 'e';
 	}
@@ -158,7 +157,6 @@ void checkEvent()
 	{
 		xclock.restart();
 		score++;
-		k++;
 		WriteConsole();
 		level[x / rez][(y + 1) / rez] = 'e';
 	}
@@ -381,15 +379,16 @@ void RunGame()
 		}
 		case Playing:
 		{
+			sf::Time elapsed4 = xclock.getElapsedTime();
 			sf::Time elapsed1 = clock.getElapsedTime();
-			if (((int)elapsed1.asSeconds()) %5 == 0)
+			if ((int)elapsed1.asSeconds() %3 == 0)
 			{
 				int i, j;
 				for (j = 0; j <= limit.y; j++)
 					for (i = 0; i <= limit.x; i++)
 						if (level[i][j] == 'g') level[i][j] = 'c';
 			}
-			if (((int)elapsed1.asSeconds()) %10 == 0)
+			if (((int)elapsed1.asSeconds()) %6 == 0 || (int)elapsed4.asSeconds() < 3)
 			{
 				int i, j;
 				for (j = 0; j <= limit.y; j++)
@@ -401,30 +400,40 @@ void RunGame()
 			window.clear(sf::Color::Black);
 			window.draw(Background2);
 			DrawLevel();
-			if (rand() % 2 == 0)
-				blueP.aggressive_move();
-			else
-				blueP.passive_move();
-			if (rand() % 2 == 0)
-				redP.aggressive_move();
-			else
-				redP.passive_move();
-			if (((int)elapsed1.asSeconds()) >13)
-			if (rand() % 2 == 0)
-				greenP.aggressive_move();
-			else
-				greenP.passive_move();
-			if (((int)elapsed1.asSeconds()) >8)
-			if (rand() % 2 == 0)
-				medP.aggressive_move();
-			else
-				medP.passive_move();
+			if ((int)elapsed4.asSeconds() > 5)
+			{
+				if (rand() % 2 == 0)
+					blueP.aggressive_move();
+				else
+					blueP.passive_move();
+				if (rand() % 2 == 0)
+					redP.aggressive_move();
+				else
+					redP.passive_move();
+				if (((int)elapsed1.asSeconds()) > 13)
+					if (rand() % 2 == 0)
+						greenP.aggressive_move();
+					else
+						greenP.passive_move();
+				if (((int)elapsed1.asSeconds()) > 8)
+					if (rand() % 2 == 0)
+						medP.aggressive_move();
+					else
+						medP.passive_move();
+			}
+			else if ((int)elapsed1.asSeconds() > 3)
+			{
+				if (rand() % 2 == 0)blueP.run_move();
+				if (rand() % 2 == 0)redP.run_move();
+				if (rand() % 2 == 0)medP.run_move();
+				if (rand() % 2 == 0)greenP.run_move();
+			}
 			DrawAll();
 			DrawHearts();
 			DrawScore();
 			showPacmanPoz();
 			pacMove();
-			if(score == 244 && k==3) _gameState = Died;
+			if(score-k == 244) _gameState = Died;
 			while (window.pollEvent(Event))
 			{
 				if (Event.type == sf::Event::KeyPressed)
@@ -585,6 +594,7 @@ void RunGame()
 								clock.restart();
 								lives = 3;
 								score = 0;
+								k = 0;
 								_gameState = Uninitialized;
 							}
 							else

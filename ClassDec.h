@@ -7,6 +7,18 @@ int minT(int i1, int i2, int i3, int i4)
 	if (i4 <= i1 && i4 <= i2 && i4 <= i3) return 4;
 	return 0;
 }
+int manT(int i1, int i2, int i3, int i4)
+{
+	if (i1 > 1000) i1 = 0;
+	if (i2 > 1000) i2 = 0;
+	if (i3 > 1000) i3 = 0;
+	if (i4 > 1000) i4 = 0;
+	if (i1 >= i2 && i1 >= i3 && i1 >= i4) return 1;
+	if (i2 >= i1 && i2 >= i3 && i2 >= i4) return 2;
+	if (i3 >= i1 && i3 >= i2 && i3 >= i4) return 3;
+	if (i4 >= i1 && i4 >= i2 && i4 >= i3) return 4;
+	return 0;
+}
 
 int Distanta(sf::Vector2f v1, sf::Vector2f v2) {
 	int x1 = v1.x;
@@ -191,6 +203,7 @@ void RectangleShapeLocal::passive_move()
 		if((int)elapsed2.asSeconds() < 5)
 		{
 			score = score + 10;
+			k += 10;
 			this->Respawn();
 	}
 	else _gameState = Died;
@@ -266,10 +279,90 @@ void RectangleShapeLocal::aggressive_move()
 		if ((int)elapsed2.asSeconds() < 5)
 		{
 			score = score + 10;
+			k += 10;
 			this->Respawn();
 		}
 		else _gameState = Died;
 }
+void RectangleShapeLocal::run_move()
+{
+	sf::Time elapsed2 = xclock.getElapsedTime();
+	if (!this->isColliding(pacman))
+		if (this->isMoving())
+		{
+			switch (this->moving)
+			{
+			case 'l': {
+				this->move(-1, 0); break;
+			}
+			case 'r': {
+				this->move(1, 0); break;
+			}
+			case 'u': {
+				this->move(0, -1); break;
+			}
+			case 'd': {
+				this->move(0, 1); break;
+			}
+			}
+			return;
+		}
+		else
+		{
+			CreareVectorDist();
+			int poz_x, poz_y;
+			poz_x = (this->getPosition().y) / 25;
+			poz_y = (this->getPosition().x) / 25;
+			if(v[this->oldpoz_x][this->oldpoz_y] > 78 && v[poz_x][poz_y]<v[this->oldpoz_x][this->oldpoz_y]+25)
+				v[this->oldpoz_x][this->oldpoz_y] = 77;
+			//else v[this->oldpoz_x][this->oldpoz_y] = 0;
+			int min = manT(v[poz_x][poz_y - 1], v[poz_x][poz_y + 1], v[poz_x - 1][poz_y], v[poz_x + 1][poz_y]);
+			switch (min)
+			{
+			case 1:
+			{
+				this->move(-1, 0);
+				this->moving = 'l';
+				this->oldpoz_x = poz_x;
+				this->oldpoz_y = poz_y;
+				break;
+			}
+			case 2:
+			{
+				this->move(1, 0);
+				moving = 'r';
+				this->oldpoz_x = poz_x;
+				this->oldpoz_y = poz_y;
+				break;
+			}
+			case 3:
+			{
+				this->move(0, -1);
+				this->moving = 'u';
+				this->oldpoz_x = poz_x;
+				this->oldpoz_y = poz_y;
+				break;
+			}
+			case 4:
+			{
+				this->move(0, 1);
+				this->moving = 'd';
+				this->oldpoz_x = poz_x;
+				this->oldpoz_y = poz_y;
+				break;
+			}
+			}
+		}
+	else
+		if ((int)elapsed2.asSeconds() < 5)
+		{
+			score = score + 10;
+			k += 10;
+			this->Respawn();
+		}
+		else _gameState = Died;
+}
+
 
 void CreateMenuText() //to be rewritten&replaced ....probably
 {

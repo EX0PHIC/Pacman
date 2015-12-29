@@ -53,6 +53,7 @@ public:
 	char moving;
 	void passive_move();
 	void aggressive_move();
+	void run_move();
 	void Respawn();
 	int oldpoz_x = 0;
 	int oldpoz_y = 0;
