@@ -2,11 +2,8 @@
 #include "SFML/Window.hpp"
 #include "SFML/Graphics.hpp"
 #include "SFML/System.hpp"
-#include "SFML/Audio.hpp"
 
-#include <map>
 #include <iostream>
-#include <cassert>
 #include <fstream>
 
 using namespace std;
@@ -39,7 +36,7 @@ struct scoruri
 scoruri scoruri_array[100];
 scoruri aux;
 
-class RectangleShapeLocal : public sf::RectangleShape
+class RectangleShapeLocal : public sf::RectangleShape //am extins clasa
 {
 public:
 	using RectangleShape::RectangleShape;

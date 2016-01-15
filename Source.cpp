@@ -1,8 +1,9 @@
 #include "ClassDef.h"
 #include "ClassDec.h"
 
-void WriteConsole()
+void WriteConsole() //pt teste in mare parte
 {
+	/*
 	sf::Vector2f a = blueP.getPosition();
 	bool r,l,u,d;
 	system("cls");
@@ -24,6 +25,7 @@ void WriteConsole()
 	cout << "BluePoz<" << a.y /rez << "," << a.x /rez << ">" << endl;
 	cout << "<" << limit.x - 1 << "> <" << limit.y + 2 << "> limita <x><y>";
 	cout << "k =" << k << endl;
+	*/
 }
 
 void ReadLevel()
@@ -70,7 +72,7 @@ void DrawLevel()
 			}
 			if (level[l][c] == 'x')
 			{
-				x_point.setPosition(c * rez + rez / 2.5, l * rez + rez / 2.5);
+				x_point.setPosition(c * rez + rez / 3, l * rez + rez / 3);
 				window.draw(x_point);	
 			}
 			if (level[l][c] == 'g')
@@ -91,7 +93,7 @@ void DrawLevel()
 
 void CreateWindow()
 {
-	window.create(sf::VideoMode(rez*(limit.x - 1), rez*(limit.y + 2)), "Shitty Pacman");
+	window.create(sf::VideoMode(rez*(limit.x - 1), rez*(limit.y + 2)), "SPacman",sf::Style::Resize);
 }
 
 void CreatePacman()
@@ -359,7 +361,6 @@ void RunGame()
 	{
 
 		sf::Event Event;
-
 		switch (_gameState)
 		{
 		case Uninitialized:
@@ -381,19 +382,20 @@ void RunGame()
 		{
 			sf::Time elapsed4 = xclock.getElapsedTime();
 			sf::Time elapsed1 = clock.getElapsedTime();
-			if ((int)elapsed1.asSeconds() %3 == 0)
-			{
-				int i, j;
-				for (j = 0; j <= limit.y; j++)
-					for (i = 0; i <= limit.x; i++)
-						if (level[i][j] == 'g') level[i][j] = 'c';
-			}
-			if (((int)elapsed1.asSeconds()) %6 == 0 || (int)elapsed4.asSeconds() < 3)
+			
+			if (((int)elapsed1.asSeconds()) %5 == 0 || (int)elapsed4.asSeconds() < 3)
 			{
 				int i, j;
 				for (j = 0; j <= limit.y; j++)
 					for (i = 0; i <= limit.x; i++)
 						if (level[i][j] == 'c') level[i][j] = 'g';
+			}
+			else
+			{
+				int i, j;
+				for (j = 0; j <= limit.y; j++)
+					for (i = 0; i <= limit.x; i++)
+						if (level[i][j] == 'g') level[i][j] = 'c';
 			}
 			window.setFramerateLimit(200);
 			window.display();
@@ -425,8 +427,8 @@ void RunGame()
 			{
 				if (rand() % 2 == 0)blueP.run_move();
 				if (rand() % 2 == 0)redP.run_move();
-				if (rand() % 2 == 0)medP.run_move();
-				if (rand() % 2 == 0)greenP.run_move();
+				if (rand() % 2 == 0 && (int)elapsed1.asSeconds() > 8)medP.run_move();
+				if (rand() % 2 == 0 && (int)elapsed1.asSeconds() > 13)greenP.run_move();
 			}
 			DrawAll();
 			DrawHearts();
@@ -442,7 +444,10 @@ void RunGame()
 						_gameState = ShowingMenu;
 						first = false;
 					}
+				if (Event.type == sf::Event::Closed)
+					window.close();
 			}
+
 			break;
 		}
 		case Died:
@@ -466,7 +471,8 @@ void RunGame()
 			window.draw(PauseText);
 			window.draw(Naem);
 			window.display();
-			if (lives != 1 && score!=244)
+			PauseText.setString("");
+			if (lives != 1 && score!=244-k*10)
 			{
 				while (window.pollEvent(Event))
 				{
@@ -482,25 +488,25 @@ void RunGame()
 			}
 			else
 			{
-				PauseText.setString("Scor: " + to_string(score) + "\n *INPUT NAME*");
+				PauseText.setString("Scor: " + to_string(score+20*lives) + "\n *INPUT NAME*");
 				while (window.pollEvent(Event))
 				{
 					if (Event.type == sf::Event::KeyPressed)
 					{
-						if (Event.key.code == sf::Keyboard::Return) 
+						if (Event.key.code == sf::Keyboard::Return)
 						{ 
 							ofstream fout("Scor.txt", std::ios_base::app | std::ios_base::out);
 							_gameState = ShowingMenu;
-							if(inputName!="")fout << inputName << " " << score << endl;
+							if(inputName!="")fout <<endl<< inputName << " " << score+20*lives << endl;
 							inputName = "";
 							Naem.setString("");
 							fout.close();
 						}
-						if (Event.key.code == sf::Keyboard::BackSpace && inputName.size()>0 && inputName.size()<8)
+						if (Event.key.code == sf::Keyboard::BackSpace && inputName.size()>0)
 							inputName.pop_back();
 					}
 
-					if (Event.type == sf::Event::TextEntered)
+					if (Event.type == sf::Event::TextEntered && inputName.size()<8)
 							if (Event.text.unicode >= 32 && Event.text.unicode <= 126)
 								inputName += (char)Event.text.unicode;
 							Naem.setString(inputName);

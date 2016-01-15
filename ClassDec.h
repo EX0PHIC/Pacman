@@ -150,8 +150,8 @@ void RectangleShapeLocal::passive_move()
 		{
 			CreareVectorDist();
 			int poz_x, poz_y;
-			poz_x = (this->getPosition().y) / 25;
-			poz_y = (this->getPosition().x) / 25;
+			poz_x = (this->getPosition().y) / rez;
+			poz_y = (this->getPosition().x) / rez;
 
 			v[this->oldpoz_x][this->oldpoz_y] = 999;
 			if (v[poz_x][poz_y - 1] < 999) v[poz_x][poz_y - 1] = rand() % 100;
@@ -235,8 +235,8 @@ void RectangleShapeLocal::aggressive_move()
 		{
 			CreareVectorDist();
 			int poz_x, poz_y;
-			poz_x = (this->getPosition().y) / 25;
-			poz_y = (this->getPosition().x) / 25;
+			poz_x = (this->getPosition().y) / rez;
+			poz_y = (this->getPosition().x) / rez;
 			if (v[this->oldpoz_x][this->oldpoz_y] < 1000) v[this->oldpoz_x][this->oldpoz_y] = 999;
 			int min = minT(v[poz_x][poz_y - 1], v[poz_x][poz_y + 1], v[poz_x - 1][poz_y], v[poz_x + 1][poz_y]);
 			switch (min)
@@ -311,10 +311,10 @@ void RectangleShapeLocal::run_move()
 		{
 			CreareVectorDist();
 			int poz_x, poz_y;
-			poz_x = (this->getPosition().y) / 25;
-			poz_y = (this->getPosition().x) / 25;
-			if(v[this->oldpoz_x][this->oldpoz_y] > 78 && v[poz_x][poz_y]<v[this->oldpoz_x][this->oldpoz_y]+25)
-				v[this->oldpoz_x][this->oldpoz_y] = 77;
+			poz_x = (this->getPosition().y) / rez;
+			poz_y = (this->getPosition().x) / rez;
+			if(v[this->oldpoz_x][this->oldpoz_y] > rez*3+3 && v[poz_x][poz_y]<v[this->oldpoz_x][this->oldpoz_y]+ rez)
+				v[this->oldpoz_x][this->oldpoz_y] = rez*3+2;
 			//else v[this->oldpoz_x][this->oldpoz_y] = 0;
 			int min = manT(v[poz_x][poz_y - 1], v[poz_x][poz_y + 1], v[poz_x - 1][poz_y], v[poz_x + 1][poz_y]);
 			switch (min)
